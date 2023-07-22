@@ -31,7 +31,7 @@ var roleClaimer = {
             if (room.controller != null) {
                 if (!room.controller.my && room.controller.owner === undefined) {
                     creep.claimController(targets[0]);
-                } else if (room.controller.owner !== undefined && room.controller.owner.username !== "Dragonisser") {
+                } else if (room.controller.owner !== undefined && room.controller.owner.username !== "nebneb125") {
                     creep.attackController(targets[0]);
                 } else if (room.controller.my) {
                     var constructSpawn = creep.room.find(FIND_CONSTRUCTION_SITES, {
