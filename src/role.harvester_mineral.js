@@ -15,7 +15,7 @@ var roleHarvester = {
             if (creep.room.storage && (creep.room.storage.store < creep.room.storage.store.getCapacity)) {
                 for(const resourceType in creep.store) {
                     if (creep.transfer(creep.room.storage, resourceType) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(creep.room.storage, {reusePath: 5});
+                        creep.moveTo(creep.room.storage, {visualizePathStyle: {stroke: '#ffffff'}, reusePath: 5});
                     }
                 }
                 

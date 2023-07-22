@@ -20,13 +20,12 @@ var structureLink = require('structure.link');
 var harvester_spawn = 3;
 var harvester_external_spawn = 4;
 var harvester_mineral_spawn = 1;
-var upgrader_spawn = 3;
+//var upgrader_spawn = 3;
 var builder_spawn = 1;
 var repairer_spawn = 1;
 var defender_spawn = 1;
 var attacker_spawn = 0;
 var notifier_spawn = 1;
-var claimer_spawn = 0;
 var filler_spawn = 0;
 var explorer_spawn = 1;
 
@@ -45,10 +44,15 @@ if (!mapLib.getRoomList().length) {
 
 module.exports.loop = function () {
     
-    console.log("Running apple");
-    for (const i in Game.creeps) {
-        console.log(i);
+    for (const i in Game.rooms) {
+        let room = Game.rooms[i];
+        console.log("Room " + room.name + " has " + room.energyAvailable + "/" + room.energyCapacityAvailable + " energy.");
     }
+    let myCreeps = "";
+    for (const i in Game.creeps) {
+        myCreeps += i + " ";
+    }
+    console.log(myCreeps);
 
     let mapRooms = mapLib.getRoomListClaimable();
 
@@ -95,16 +99,16 @@ module.exports.loop = function () {
         roleLib.spawnBuilder(spawn, room, room_Builders.length, builder_spawn, room_Harvesters.length);
         
         //REPAIRER
-        //roleLib.spawnRepairer(spawn, room, room_Repairers.length, repairer_spawn, room_Harvesters.length);
+        roleLib.spawnRepairer(spawn, room, room_Repairers.length, repairer_spawn, room_Harvesters.length);
         
         //DEFENDER
         roleLib.spawnDefender(spawn, room, room_Defenders.length, defender_spawn);
 
         //ATTACKER
-        //roleLib.spawnAttacker(spawn, room, room_Attackers.length, attacker_spawn);
+        roleLib.spawnAttacker(spawn, room, room_Attackers.length, attacker_spawn);
         
         //NOTIFIER
-        //roleLib.spawnNotifier(spawn, room, room_Notifier.length, builder_spawn, room_Harvesters.length);
+        roleLib.spawnNotifier(spawn, room, room_Notifier.length, notifier_spawn, room_Harvesters.length);
         
         //FILLER
         roleLib.spawnFiller(spawn, room, room_Fillers.length, filler_spawn, room_Harvesters.length);
@@ -167,6 +171,9 @@ module.exports.loop = function () {
                 break;
             case 'attacker':
                 roleAttacker.run(creep);
+                break;
+            case 'notifier':
+                roleNotifier.run(creep);
                 break;
             case 'claimer':
                 roleClaimer.run(creep);
