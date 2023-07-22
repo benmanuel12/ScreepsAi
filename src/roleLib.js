@@ -148,7 +148,7 @@ var spawnCreeps = {
                     spawn.spawnCreep([WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE], "Harvester_" + room.name + "_" + number, {
                         memory: {
                             role: 'harvester',
-                            room_dest: roomDestination
+                            room_dest: roomDestination.name
                         }
                     });
                 } else {
@@ -160,7 +160,7 @@ var spawnCreeps = {
                     spawn.spawnCreep([WORK, CARRY, MOVE], "Harvester_" + room.name + "_" + number, {
                         memory: {
                             role: 'harvester',
-                            room_dest: roomDestination
+                            room_dest: roomDestination.name
                         }
                     });
                 } else {

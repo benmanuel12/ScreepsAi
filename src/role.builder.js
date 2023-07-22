@@ -20,9 +20,9 @@ var roleBuilder = {
         });
 
         if (creep.memory.room_dest != null && creep.room.name !== creep.memory.room_dest) {
-            room_dest = creep.memory.room_dest;
+            room_dest = creep.memory.room_dest.name;
             var roomName = String(room_dest);
-            creep.moveTo(new RoomPosition(25, 25, roomName));
+            creep.moveTo(new RoomPosition(18, 25, roomName));
         } else {
             if (creep.memory.building && creep.store.getUsedCapacity([RESOURCE_ENERGY]) === 0) {
                 creep.memory.building = false;

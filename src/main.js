@@ -11,7 +11,7 @@ var roleClaimer = require('role.claimer');
 var roleFiller = require('role.filler');
 var roleExplorer = require('role.explorer');
 
-var roleLib = require('roleLib');
+var roleLib = require('roleLib refactored');
 var mapLib = require('mapLib');
 
 var structureTower = require('structure.tower');
@@ -20,14 +20,13 @@ var structureLink = require('structure.link');
 var harvester_spawn = 3;
 var harvester_external_spawn = 4;
 var harvester_mineral_spawn = 1;
-//var upgrader_spawn = 3;
+var upgrader_spawn = 3;
 var builder_spawn = 1;
 var repairer_spawn = 1;
-var defender_spawn = 1;
+var defender_spawn = 0;
 var attacker_spawn = 0;
 var notifier_spawn = 1;
-var filler_spawn = 0;
-var explorer_spawn = 1;
+var filler_spawn = 1;
 
 if (!mapLib.getRoomList().length) {
     mapLib.mapRoomsAroundStart(Game.spawns.Spawn1.room.name);
@@ -74,20 +73,20 @@ module.exports.loop = function () {
         let room = spawn.room;
         
         var room_Harvesters = _.filter(role_Harvesters, (creep) => creep.memory.room_dest === room.name);
-        var room_Harvesters_External = _.filter(role_Harvesters_External, (creep) => creep.memory.room_dest === room.name);
+        var room_Harvesters_External = _.filter(role_Harvesters_External, (creep) => creep.memory.room_dest.name === room.name);
         var room_Harvesters_Mineral = _.filter(role_Harvesters_Mineral, (creep) => creep.memory.room_dest === room.name);
         var room_Upgraders = _.filter(role_Upgraders, (creep) => creep.memory.room_dest === room.name);
-        var room_Builders = _.filter(role_Builders, (creep) => creep.memory.room_dest === room.name);
+        var room_Builders = _.filter(role_Builders, (creep) => creep.memory.room_dest.name === room.name);
         var room_Repairers = _.filter(role_Repairers, (creep) => creep.memory.room_dest === room.name);
         var room_Defenders = _.filter(role_Defenders, (creep) => creep.memory.room_dest === room.name);
         var room_Attackers = _.filter(role_Attackers, (creep) => creep.memory.room_dest === room.name);
         var room_Claimers = _.filter(role_Claimers, (creep) => creep.memory.room_dest === room.name);
-        var room_Fillers = _.filter(role_Fillers, (creep) => creep.memory.room_dest === room.name);
+        var room_Fillers = _.filter(role_Fillers, (creep) => creep.memory.room_dest.name === room.name);
         var room_Explorer = role_Explorer;
         var room_Notifier = role_Notifier;
 
         //HARVESTER
-        roleLib.spawnHarvester(spawn, room, room_Harvesters.length, harvester_spawn);
+        roleLib.spawnCreepOfRole('harvester', spawn, room, room_Harvesters.length, harvester_spawn);
 
         //HARVESTER_MINERAL
         //roleLib.spawnHarvesterMineral();
@@ -185,5 +184,9 @@ module.exports.loop = function () {
                 roleExplorer.run(creep);
                 break;
         }
+    }
+    for (const i in Game.rooms) {
+        let room = Game.rooms[i];
+        console.log("Room " + room.name + " has " + room.energyAvailable + "/" + room.energyCapacityAvailable + " energy.");
     }
 };
