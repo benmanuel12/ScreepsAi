@@ -47,11 +47,22 @@ module.exports.loop = function () {
         let room = Game.rooms[i];
         console.log("Room " + room.name + " has " + room.energyAvailable + "/" + room.energyCapacityAvailable + " energy.");
     }
-    let myCreeps = "";
+
+    let myCreeps = new Map();
     for (const i in Game.creeps) {
-        myCreeps += i + " ";
+        let role = Game.creeps[i].memory.role;
+        if (myCreeps.has(role)){
+            myCreeps.set(role, myCreeps.get(role) + 1);
+        } else {
+            myCreeps.set(role, 1);
+        }
     }
-    console.log(myCreeps);
+
+    let creepsOut = "";
+    for (var [key, value] of myCreeps){
+        creepsOut += key + ": " + value + " ";
+    }
+    console.log(creepsOut);
 
     let mapRooms = mapLib.getRoomListClaimable();
 

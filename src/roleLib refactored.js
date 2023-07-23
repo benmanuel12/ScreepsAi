@@ -222,6 +222,7 @@ var spawnCreeps = {
     // BUILDER
     spawnBuilder: function (spawn, roomDestination, creepsSpawned, creepsNeeded, dependingCreepsSpawned) {
         console.log("Trying to spawn Builder");
+        let room = spawn.room;
         let targets = roomDestination.find(FIND_CONSTRUCTION_SITES);
         if (targets.length > 0 && targets.length <= 4) {
             creepsNeeded = 2;
@@ -234,11 +235,11 @@ var spawnCreeps = {
         if (creepsSpawned < creepsNeeded && dependingCreepsSpawned > 0) {
             let number = Game.time;
             if (roomDestination.energyAvailable >= 1200) {
-                this.spawnCreepWithTheseParts(spawn, [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE], "Builder", {role: 'builder', room_dest: roomDestination}, number);
+                this.spawnCreepWithTheseParts(spawn, [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE], "Builder", {role: 'builder', room_dest: room.name}, number);
             } else if (roomDestination.energyAvailable >= 600) {
-                this.spawnCreepWithTheseParts(spawn, [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE], "Builder", {role: 'builder', room_dest: roomDestination}, number);
+                this.spawnCreepWithTheseParts(spawn, [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE], "Builder", {role: 'builder', room_dest: room.name}, number);
             } else {
-                this.spawnCreepWithTheseParts(spawn, [WORK, CARRY, MOVE], "Builder", {role: 'builder', room_dest: roomDestination}, number);
+                this.spawnCreepWithTheseParts(spawn, [WORK, CARRY, MOVE], "Builder", {role: 'builder', room_dest: room.name}, number);
             }
         } else {
             console.log("Enough Builders exist");
