@@ -16,7 +16,7 @@ var roleAttacker = {
                 
         if (Game.flags.FlagAttack != null) {
             if (!creep.memory.flagattack) {
-                creep.moveTo(Game.flags.FlagAttack, {visualizePathStyle: {stroke: '#ffffff'}})
+                creep.moveTo(Game.flags.FlagAttack, {visualizePathStyle: {stroke: '#FF0000'}})
                 if(creep.pos.isNearTo(Game.flags.FlagAttack)) {
                     creep.memory.flagattack = true;
                 }

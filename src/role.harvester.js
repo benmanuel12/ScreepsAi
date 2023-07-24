@@ -10,7 +10,7 @@ var roleHarvester = {
         if (creep.store.getUsedCapacity([RESOURCE_ENERGY]) < creep.store.getCapacity([RESOURCE_ENERGY])) {
             creep.say("⛏")
             if (creep.harvest(sources) === ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources, {visualizePathStyle: {stroke: '#ffaa00'}});
+                creep.moveTo(sources, {visualizePathStyle: {stroke: '#FFFF00'}});
             }
         }
         else {
@@ -36,18 +36,18 @@ var roleHarvester = {
             }
             if (tower != null && enemy.length > 0) {
                 if (creep.transfer(tower, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(tower, {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(tower, {visualizePathStyle: {stroke: '#FFFF00'}});
                 }
             } else if (creep.room.storage && _.sum(creep.room.storage.store) < creep.room.storage.storeCapacity && !target) {
                 if (creep.transfer(creep.room.storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(creep.room.storage, {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(creep.room.storage, {visualizePathStyle: {stroke: '#FFFF00'}});
                 }
             } else if (target) {
                 if (creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(target, {visualizePathStyle: {stroke: '#FFFF00'}});
                 }
             } else {
-                creep.moveTo(25, 25, {visualizePathStyle: {stroke: '#ffffff'}});
+                creep.moveTo(25, 25, {visualizePathStyle: {stroke: '#FFFF00'}});
             }
         }
     }

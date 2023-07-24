@@ -22,7 +22,7 @@ var roleBuilder = {
         if (creep.memory.room_dest != null && creep.room.name !== creep.memory.room_dest) {
             room_dest = creep.memory.room_dest;
             //var roomName = String(room_dest);
-            creep.moveTo(new RoomPosition(18, 25, roomName));
+            creep.moveTo(new RoomPosition(18, 25, roomName), {visualizePathStyle: {stroke: '#0000FF'}});
         } else {
             if (creep.memory.building && creep.store.getUsedCapacity([RESOURCE_ENERGY]) === 0) {
                 creep.memory.building = false;
@@ -35,11 +35,11 @@ var roleBuilder = {
                 if (targets !== undefined) {
                     creep.say("⛏")
                     if (creep.build(targets) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(targets, {visualizePathStyle: {stroke: '#ffffff'}});
+                        creep.moveTo(targets, {visualizePathStyle: {stroke: '#0000FF'}});
                     }
                 } else if (targetEnergy) {
                     if (creep.transfer(targetEnergy, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(targetEnergy, {visualizePathStyle: {stroke: '#ffffff'}});
+                        creep.moveTo(targetEnergy, {visualizePathStyle: {stroke: '#0000FF'}});
                     }
                 }
             } else {
@@ -47,12 +47,12 @@ var roleBuilder = {
 
                 if ((creep.room.energyAvailable > 300 && targets && creep.room.storage !== undefined) && creep.room.storage.store[RESOURCE_ENERGY] > 0) {
                     if (creep.withdraw(creep.room.storage, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(creep.room.storage, {visualizePathStyle: {stroke: '#ffaa00'}});
+                        creep.moveTo(creep.room.storage, {visualizePathStyle: {stroke: '#0000FF'}});
                     }
                 } else {
                     creep.say("⛏")
                     if (creep.harvest(sources) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(sources, {visualizePathStyle: {stroke: '#ffaa00'}});
+                        creep.moveTo(sources, {visualizePathStyle: {stroke: '#0000FF'}});
                     }
                 }
             }

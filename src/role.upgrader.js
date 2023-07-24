@@ -23,7 +23,7 @@ var roleUpgrader = {
         if (creep.memory.room_dest != null && creep.room.name !== creep.memory.room_dest && !creep.memory.renew_process) {
             room_dest = creep.memory.room_dest;
             var roomName = String(room_dest.name);
-            creep.moveTo(new RoomPosition(18, 25, roomName));
+            creep.moveTo(new RoomPosition(18, 25, roomName), {visualizePathStyle: {stroke: '#800080'}});
         } else {
             if (creep.memory.building && creep.store.getUsedCapacity([RESOURCE_ENERGY]) === 0) {
                 creep.memory.building = false;
@@ -35,7 +35,7 @@ var roleUpgrader = {
             if (creep.memory.building) {
                 creep.say("⏏");
                 if (creep.upgradeController(creep.room.controller) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#00B200'}, reusePath:10});
+                    creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#800080'}, reusePath:10});
                 }
                 /*if (creep.signController(creep.room.controller, "Gebiet des Deutschen Kaiserreich") == ERR_NOT_IN_RANGE) {
                     creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#00B200'}});
@@ -45,14 +45,14 @@ var roleUpgrader = {
                     creep.say("⛏");
                     var sources = creep.pos.findClosestByPath(FIND_SOURCES);
                     if (creep.room.storage && creep.room.storage.store.energy > 10000) {
-                        creep.moveTo(creep.room.storage, {visualizePathStyle: {stroke: '#ffaa00'}});
+                        creep.moveTo(creep.room.storage, {visualizePathStyle: {stroke: '#800080'}});
                         creep.withdraw(creep.room.storage, RESOURCE_ENERGY);
                     } else if (creep.harvest(sources) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(sources, {visualizePathStyle: {stroke: '#ffaa00'}});
+                        creep.moveTo(sources, {visualizePathStyle: {stroke: '#800080'}});
                     }
                 } else {
                     if (creep.moveTo(spawn[0]) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(spawn[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                        creep.moveTo(spawn[0], {visualizePathStyle: {stroke: '#800080'}});
                     } else {
                         if (creep.room.energyAvailable > 500) {
                             creep.suicide();

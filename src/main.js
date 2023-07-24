@@ -11,7 +11,7 @@ var roleClaimer = require('role.claimer');
 var roleFiller = require('role.filler');
 var roleExplorer = require('role.explorer');
 
-var roleLib = require('roleLib refactored');
+var roleLib = require('roleLib');
 var mapLib = require('mapLib');
 
 var structureTower = require('structure.tower');
@@ -22,7 +22,7 @@ var harvester_external_spawn = 4;
 var harvester_mineral_spawn = 1;
 var upgrader_spawn = 3;
 var builder_spawn = 1;
-var repairer_spawn = 1;
+var repairer_spawn = 3;
 var defender_spawn = 0;
 var attacker_spawn = 0;
 var notifier_spawn = 1;
@@ -87,7 +87,7 @@ module.exports.loop = function () {
         var room_Harvesters_External = _.filter(role_Harvesters_External, (creep) => creep.memory.room_dest.name === room.name);
         var room_Harvesters_Mineral = _.filter(role_Harvesters_Mineral, (creep) => creep.memory.room_dest === room.name);
         var room_Upgraders = _.filter(role_Upgraders, (creep) => creep.memory.room_dest === room.name);
-        var room_Builders = _.filter(role_Builders, (creep) => creep.memory.room_dest.name === room.name);
+        var room_Builders = _.filter(role_Builders, (creep) => creep.memory.room_dest === room.name);
         var room_Repairers = _.filter(role_Repairers, (creep) => creep.memory.room_dest === room.name);
         var room_Defenders = _.filter(role_Defenders, (creep) => creep.memory.room_dest === room.name);
         var room_Attackers = _.filter(role_Attackers, (creep) => creep.memory.room_dest === room.name);
@@ -100,32 +100,32 @@ module.exports.loop = function () {
         roleLib.spawnCreepOfRole('harvester', spawn, room, room_Harvesters.length, harvester_spawn);
 
         //HARVESTER_MINERAL
-        //roleLib.spawnHarvesterMineral();
+        //roleLib..spawnCreepOfRole();
 
         //UPGRADER
-        roleLib.spawnUpgrader(spawn, room, room_Upgraders.length, upgrader_spawn, room_Harvesters.length);
+        roleLib.spawnCreepOfRole('upgrader', spawn, room, room_Upgraders.length, upgrader_spawn, room_Harvesters.length);
 
         //BUILDER
-        roleLib.spawnBuilder(spawn, room, room_Builders.length, builder_spawn, room_Harvesters.length);
+        roleLib.spawnCreepOfRole('builder', spawn, room, room_Builders.length, builder_spawn, room_Harvesters.length);
         
         //REPAIRER
-        roleLib.spawnRepairer(spawn, room, room_Repairers.length, repairer_spawn, room_Harvesters.length);
+        roleLib.spawnCreepOfRole('repairer', spawn, room, room_Repairers.length, repairer_spawn, room_Harvesters.length);
         
         //DEFENDER
-        roleLib.spawnDefender(spawn, room, room_Defenders.length, defender_spawn);
+        roleLib.spawnCreepOfRole('defender', spawn, room, room_Defenders.length, defender_spawn);
 
         //ATTACKER
-        roleLib.spawnAttacker(spawn, room, room_Attackers.length, attacker_spawn);
+        roleLib.spawnCreepOfRole('attacker', spawn, room, room_Attackers.length, attacker_spawn);
         
         //NOTIFIER
-        roleLib.spawnNotifier(spawn, room, room_Notifier.length, notifier_spawn, room_Harvesters.length);
+        roleLib.spawnCreepOfRole('notifier', spawn, room, room_Notifier.length, notifier_spawn, room_Harvesters.length);
         
         //FILLER
-        roleLib.spawnFiller(spawn, room, room_Fillers.length, filler_spawn, room_Harvesters.length);
+        roleLib.spawnCreepOfRole('filler', spawn, room, room_Fillers.length, filler_spawn, room_Harvesters.length);
 
         //EXPLORER
         if (mapLib.getUnvisitedRooms().length) {
-            roleLib.spawnExplorer(spawn, null, room_Explorer.length, mapLib.getGCLClaimsAvailable() ? mapLib.getGCLClaimsAvailable() : 5, room_Harvesters.length);
+            roleLib.spawnCreepOfRole('explorer', spawn, null, room_Explorer.length, mapLib.getGCLClaimsAvailable() ? mapLib.getGCLClaimsAvailable() : 5, room_Harvesters.length);
         }
         
         for (let x = 0; x < mapRooms.length; x++) {
@@ -134,10 +134,10 @@ module.exports.loop = function () {
             var room_Claimers = _.filter(role_Claimers, (creep) => creep.memory.room_dest === mapRooms[x].name);
 
             //HARVESTER_EXTERNAL
-            roleLib.spawnHarvesterExternal(spawn, mapLib.getNextClaimableRoom(room.name), room_Harvesters_External.length, harvester_external_spawn);
+            roleLib.spawnCreepOfRole('harvester_external', spawn, mapLib.getNextClaimableRoom(room.name), room_Harvesters_External.length, harvester_external_spawn);
             
             //CLAIMER
-            roleLib.spawnClaimer(spawn, mapLib.getNextClaimableRoom(room.name), room_Claimers.length, mapLib.getGCLClaimsAvailable() / 2, room_Harvesters.length);
+            roleLib.spawnCreepOfRole('claimer', spawn, mapLib.getNextClaimableRoom(room.name), room_Claimers.length, mapLib.getGCLClaimsAvailable() / 2, room_Harvesters.length);
         }
     }
 
