@@ -17,7 +17,7 @@ var mapLib = require('mapLib');
 var structureTower = require('structure.tower');
 var structureLink = require('structure.link');
 
-var harvester_spawn = 3;
+var harvester_spawn = 5;
 var harvester_external_spawn = 4;
 var harvester_mineral_spawn = 1;
 var upgrader_spawn = 3;
