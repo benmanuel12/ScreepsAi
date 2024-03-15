@@ -1,3 +1,13 @@
+// Error Codes
+let errorMap = new Map();
+errorMap.set('0', 'The operation has been scheduled successfully.');
+errorMap.set('-1', 'You are not the owner of this spawn.')
+errorMap.set('-3', 'There is a creep with the same name already.')
+errorMap.set('-4', 'The spawn is already in process of spawning another creep.')
+errorMap.set('-6', 'The spawn and its extensions contain not enough energy to create a creep with the given body.')
+errorMap.set('-10', 'Body is not properly described or name was not provided.')
+errorMap.set('-14', 'Your Room Controller level is insufficient to use this spawn.')
+
 var spawnCreeps = {
 
     //base function
@@ -38,13 +48,12 @@ var spawnCreeps = {
 
     spawnCreepWithTheseParts: function (spawn, parts, name, memory, number) {
         let room = spawn.room;
-        //console.log("Error code: " + (spawn.spawnCreep(parts, name + "_" + room.name + "_" + number, {dryRun: true})));
-        //console.log(name + "_" + room.name + "_" + number);
         if (spawn.spawnCreep(parts, name + "_" + room.name + "_" + number, {dryRun: true}) === 0) {
             console.log("Spawning " + name + "_" + room.name + "_" + number)
             spawn.spawnCreep(parts, name + "_" + room.name + "_" + number, {memory: memory});
         } else {
-            console.log("Couldn't spawn " + name + " Error code: " + (spawn.spawnCreep(parts, name + "_" + room.name + "_" + number, {dryRun: true})));
+            errorCode = spawn.spawnCreep(parts, name + "_" + room.name + "_" + number, {dryRun: true})
+            console.log("Couldn't spawn " + name + " - Error: " + errorMap.get(errorCode.toString()));
         }
     },
 
@@ -60,7 +69,7 @@ var spawnCreeps = {
                 this.spawnCreepWithTheseParts(spawn, [WORK, CARRY, MOVE, MOVE], "Harvester", {role: 'harvester',room_dest: room.name}, number);
             }
         } else {
-            console.log("Enough Harvesters exist");
+            console.log(creepsSpawned + "/" + creepsNeeded + " Harvesters exist");
         }
     },
 
@@ -76,7 +85,7 @@ var spawnCreeps = {
                 this.spawnCreepWithTheseParts(spawn, [CARRY, ATTACK, MOVE, MOVE, MOVE, TOUGH], "Defender", {role: 'defender', room_dest: room.name}, number)
             }
         } else {
-            console.log("Enough Defenders exist");
+            console.log(creepsSpawned + "/" + creepsNeeded + " Defenders exist");
         }
     },
 
@@ -93,7 +102,7 @@ var spawnCreeps = {
                 this.spawnCreepWithTheseParts(spawn,[WORK, CARRY, MOVE, MOVE], "Repairer", {role: 'repairer', room_dest: room.name}, number);
             }
         } else {
-            console.log("Enough Repairers exist");
+            console.log(creepsSpawned + "/" + creepsNeeded + " Repairers exist");
         }
     },
 
@@ -110,7 +119,7 @@ var spawnCreeps = {
                 this.spawnCreepWithTheseParts(spawn, [ATTACK, TOUGH, MOVE, MOVE], "Attacker", {role: 'attacker', room_dest: room.name}, number);
             }
         } else {
-            console.log("Enough Attackers exist");
+            console.log(creepsSpawned + "/" + creepsNeeded + " Attackers exist");
         }
     },
 
@@ -123,7 +132,7 @@ var spawnCreeps = {
             this.spawnCreepWithTheseParts(spawn, [MOVE, MOVE], "Notifier", {role: 'notifier', room_dest: room.name}, number);
     
         } else {
-            console.log("A Notifier exists");
+            console.log(creepsSpawned + "/" + creepsNeeded + " Notifiers exists");
         }
     },
 
@@ -156,7 +165,7 @@ var spawnCreeps = {
                     this.spawnCreepWithTheseParts(spawn, [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE], "Harvester_Ex", {role: 'harvester_external', room_dest: roomDestination, room_spawn: spawn.room.name, flag_dest_x: '25', flag_dest_y: '25'}, number);
                 }
             } else {
-                console.log("Enough External Harvesters Exist");
+                console.log(creepsSpawned + "/" + creepsNeeded + " External Harvesters Exist");
             }
         }
     },
@@ -214,7 +223,7 @@ var spawnCreeps = {
                 this.spawnCreepWithTheseParts(spawn, [WORK, CARRY, MOVE, MOVE], "Upgrader", {role: 'upgrader', room_dest: room.name, cLevel: '0'}, number);
             }
         } else {
-            console.log("Enough Upgraders exist");
+            console.log(creepsSpawned + "/" + creepsNeeded + " Upgraders exist");
         }
 
     },
@@ -242,7 +251,7 @@ var spawnCreeps = {
                 this.spawnCreepWithTheseParts(spawn, [WORK, CARRY, MOVE, MOVE], "Builder", {role: 'builder', room_dest: room.name}, number);
             }
         } else {
-            console.log("Enough Builders exist");
+            console.log(creepsSpawned + "/" + creepsNeeded + " Builders exist");
         }
     },
 
@@ -270,7 +279,7 @@ var spawnCreeps = {
             }
         }
         else {
-            console.log("Enough Fillers exist or no storage/links are present");
+            console.log(creepsSpawned + "/" + creepsNeeded + " Fillers exist or no storage/links are present");
         }
     },
 
@@ -287,7 +296,7 @@ var spawnCreeps = {
                 }
             }
         } else {
-            console.log("Enough Claimers already");
+            console.log(creepsSpawned + "/" + creepsNeeded + " Claimers already");
         }
     },
 
@@ -298,7 +307,7 @@ var spawnCreeps = {
             let number = Game.time;
             this.spawnCreepWithTheseParts(spawn, [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE], "Explorer", {role: 'explorer', stuckTimer: 0}, number);
         } else {
-            console.log("Enough Explorers exist");
+            console.log(creepsSpawned + "/" + creepsNeeded + " Explorers exist");
         }
     }
 };
