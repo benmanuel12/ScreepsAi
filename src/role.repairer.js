@@ -21,6 +21,7 @@ var roleRepairer = {
             });
 
             if (targets.length) {
+                //console.log(targets[target_count].hits);
                 if (targets[target_count].hits < hitsRepair_2) {
                     if (creep.repair(targets[target_count]) === ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[target_count], {visualizePathStyle: {stroke: '#00FF00'}});
