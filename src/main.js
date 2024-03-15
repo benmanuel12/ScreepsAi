@@ -11,7 +11,7 @@ var roleClaimer = require('role.claimer');
 var roleFiller = require('role.filler');
 var roleExplorer = require('role.explorer');
 
-var roleLib = require('roleLib_refactored');
+var roleLib = require('roleLib');
 var mapLib = require('mapLib');
 
 var structureTower = require('structure.tower');
