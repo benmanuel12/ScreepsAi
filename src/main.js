@@ -11,15 +11,15 @@ var roleClaimer = require('role.claimer');
 var roleFiller = require('role.filler');
 var roleExplorer = require('role.explorer');
 
-var roleLib = require('roleLib');
+var roleLib = require('roleLib_refactored');
 var mapLib = require('mapLib');
 
 var structureTower = require('structure.tower');
 var structureLink = require('structure.link');
 
-var harvester_spawn = 5;
-var harvester_external_spawn = 4;
-var harvester_mineral_spawn = 1;
+var harvester_spawn = 3;
+var harvester_external_spawn = 0;
+var harvester_mineral_spawn = 0;
 var upgrader_spawn = 3;
 var builder_spawn = 1;
 var repairer_spawn = 3;
