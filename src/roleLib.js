@@ -108,7 +108,7 @@ let Explorer = {
     role: 'explorer',
 }
 
-// Costs
+// Costs of creep parts
 let costs = new Map();
 costs.set(MOVE, 50);
 costs.set(WORK, 100);
@@ -132,9 +132,10 @@ errorMap.set('-14', 'Your Room Controller level is insufficient to use this spaw
 
 var spawnCreeps = {
 
+    // takes an array of creep part constants as parameter, returns the energy cost sum of those parts
     creepCost: function (parts) {
-        sum = 0;
-        for (part in parts) {
+        let sum = 0;
+        for (let part in parts) {
             sum = sum + costs.get(parts[part]);
         }
         return sum
@@ -178,33 +179,47 @@ var spawnCreeps = {
         }
     },
 
+    // Attempts to spawn any creep given the name of its type as defined in objects, the spawn to be used
+    // the number of existing creeps of that type, the number of creeps of that type desired, and any extra info
+    // to go in the creep memory
     newSpawnCreepWithTheseParts: function(creepType, spawn, creepsSpawned, creepsNeeded, extraMemory) {
         let roomDestination = spawn.room;
         let partsToUse = []
+
+        // Default memory
         let memory = {role: creepType.role, room_dest: roomDestination.name}
         let currentCost = 0;
+        // If extra memory is supplied, create a new object with all keys of the default and extra memory
         if (Object.keys(extraMemory).length > 0) {
             memory = {...memory, ...extraMemory}
         }
+        // check if the limit has been reached
         if (creepsSpawned < creepsNeeded) {
             let number = Game.time;
-            for (index in creepType.parts) {
+
+            // Check each array of parts in the object in turn (assumes ordered from most to least expensive)
+            // Sets partsToUse to the first affordable one based on total availible capacity
+            for (let index in creepType.parts) {
                 currentCost = this.creepCost(creepType.parts[index]);
                 if (currentCost <= roomDestination.energyCapacityAvailable) {
                     partsToUse = creepType.parts[index];
                     break
                 }
             }
-            
+            // If there is an affordable config
             if (partsToUse.length){
-                errorCode = spawn.spawnCreep(partsToUse, creepType.name + "_" + roomDestination.name + "_" + number, {dryRun: true})
+                // Check if spawn has enough energy stored
+                let errorCode = spawn.spawnCreep(partsToUse, creepType.name + "_" + roomDestination.name + "_" + number, {dryRun: true})
+                // No issues, spawn the creep
                 if (errorCode === 0) {
                     console.log("Spawning " + creepType.name + "_" + roomDestination.name + "_" + number)
                     spawn.spawnCreep(partsToUse, creepType.name + "_" + roomDestination.name + "_" + number, {memory: memory});
                 } else {
+                    // Spawn has enough capacity but not enough energy yet
                     if (errorCode === -6) {
                         console.log("Couldn't spawn " + creepType.name + " - " + roomDestination.energyAvailable + "/" + currentCost + " availible (Limit: " + roomDestination.energyCapacityAvailable + ")")
                     } else {
+                        // Some other error occured, print out the error message
                         console.log("Couldn't spawn " + creepType.name + " - Error: " + errorMap.get(errorCode.toString()));
                     }
                 }
@@ -216,6 +231,7 @@ var spawnCreeps = {
         }
     },
     
+    // Creep Role Wrapper Functions
 
     // HARVESTER
     spawnHarvester: function (spawn, creepsSpawned, creepsNeeded) {

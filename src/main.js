@@ -1,3 +1,4 @@
+// Import creep roles from other files
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
@@ -11,12 +12,14 @@ var roleClaimer = require('role.claimer');
 var roleFiller = require('role.filler');
 var roleExplorer = require('role.explorer');
 
+// Import custom libraries from other files
 var roleLib = require('roleLib');
 var mapLib = require('mapLib');
 
 var structureTower = require('structure.tower');
 var structureLink = require('structure.link');
 
+// Define global limits on creep numbers
 var harvester_spawn = 3;
 var harvester_external_spawn = 0;
 var harvester_mineral_spawn = 0;
@@ -40,14 +43,10 @@ if (!mapLib.getRoomList().length) {
 
 //mapLib.getRoomList().forEach(el => el.visited = false)
 
-
+// Main Loop
 module.exports.loop = function () {
-    
-    for (const i in Game.rooms) {
-        let room = Game.rooms[i];
-        console.log("Room " + room.name + " has " + room.energyAvailable + "/" + room.energyCapacityAvailable + " energy.");
-    }
 
+    // Count how many creeps there are of each role
     let myCreeps = new Map();
     for (const i in Game.creeps) {
         let role = Game.creeps[i].memory.role;
@@ -58,6 +57,7 @@ module.exports.loop = function () {
         }
     }
 
+    // Print out how many creeps there are of each role
     let creepsOut = "";
     for (var [key, value] of myCreeps){
         creepsOut += key + ": " + value + " ";
@@ -66,6 +66,7 @@ module.exports.loop = function () {
 
     let mapRooms = mapLib.getRoomListClaimable();
 
+    // Creates an array of all creeps that are of a certain role for each role
     var role_Harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester');
     var role_Harvesters_External = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester_external');
     var role_Harvesters_Mineral = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester_mineral');
@@ -83,6 +84,7 @@ module.exports.loop = function () {
         let spawn = Game.spawns[spawns];
         let room = spawn.room;
         
+        // Limits the above arrays to only those creeps of those roles in the current room
         var room_Harvesters = _.filter(role_Harvesters, (creep) => creep.memory.room_dest === room.name);
         var room_Harvesters_External = _.filter(role_Harvesters_External, (creep) => creep.memory.room_dest.name === room.name);
         var room_Harvesters_Mineral = _.filter(role_Harvesters_Mineral, (creep) => creep.memory.room_dest === room.name);
@@ -96,6 +98,8 @@ module.exports.loop = function () {
         var room_Explorer = role_Explorer;
         var room_Notifier = role_Notifier;
 
+        // Attempts to spawn new creeps
+        // Priority of spawning does not prioritise harvester, instead explorer, notifier, repairer then harvester
         //HARVESTER
         roleLib.spawnCreepOfRole('harvester', spawn, room, room_Harvesters.length, harvester_spawn);
 
@@ -125,7 +129,7 @@ module.exports.loop = function () {
 
         //EXPLORER
         if (mapLib.getUnvisitedRooms().length) {
-            roleLib.spawnCreepOfRole('explorer', spawn, null, room_Explorer.length, mapLib.getGCLClaimsAvailable() ? mapLib.getGCLClaimsAvailable() : 5, room_Harvesters.length);
+            roleLib.spawnCreepOfRole('explorer', spawn, null, room_Explorer.length, mapLib.getGCLClaimsAvailable() ? mapLib.getGCLClaimsAvailable() : 1, room_Harvesters.length);
         }
         
         for (let x = 0; x < mapRooms.length; x++) {
@@ -141,7 +145,7 @@ module.exports.loop = function () {
         }
     }
 
-
+    // Clears old creep names from memory
     for (let name in Memory.creeps) {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
@@ -149,12 +153,14 @@ module.exports.loop = function () {
         }
     }
 
+    // Runs the AI for towers and links
     for (let rooms in Game.rooms) {
         let room = Game.rooms[rooms];
         structureTower.run(room);
         structureLink.run(room);
     }
 
+    // Runs the AI for creeps
     for (let name in Game.creeps) {
         let creep = Game.creeps[name];
         switch (creep.memory.role) {
@@ -196,6 +202,8 @@ module.exports.loop = function () {
                 break;
         }
     }
+    
+    // Print out how much energy my rooms have
     for (const i in Game.rooms) {
         let room = Game.rooms[i];
         console.log("Room " + room.name + " has " + room.energyAvailable + "/" + room.energyCapacityAvailable + " energy.");
