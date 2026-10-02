@@ -1,113 +1,3 @@
-// Creep Types
-let Harvester = {
-    parts: [
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
-        [WORK, CARRY, MOVE, MOVE]
-    ],
-    name: "Harvester",
-    role: 'harvester',
-}
-
-let Defender = {
-    parts: [
-        [CARRY, CARRY, MOVE, MOVE, ATTACK, HEAL, HEAL, TOUGH, TOUGH],
-        [CARRY, ATTACK, MOVE, MOVE, MOVE, TOUGH]
-    ],
-    name: "Defender",
-    role: 'defender',
-}
-
-let Repairer = {
-    parts: [
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
-        [WORK, CARRY, MOVE, MOVE]
-    ],
-    name: "Repairer",
-    role: 'repairer',
-}
-
-let Attacker = {
-    parts: [
-        [ATTACK, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE],
-        [ATTACK, TOUGH, MOVE, MOVE]
-    ],
-    name: "Attacker",
-    role: 'attacker',
-}
-
-let Notifier = {
-    parts: [
-        [MOVE, MOVE]
-    ],
-    name: "Notifier",
-    role: 'notifier',
-}
-
-let ExternalHarvester = {
-    parts: [
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
-    ],
-    name: "Harvester_Ex",
-    role: 'harvester_external',
-}
-
-let MineralHarvester = {
-    parts: [
-        [WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
-    ],
-    name: "HarvesterM",
-    role: 'harvester_mineral',
-}
-
-let Upgrader = {
-    parts: [
-        [WORK, WORK, WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
-        [WORK, CARRY, MOVE, MOVE]
-    ],
-    name: "Upgrader",
-    role: 'upgrader',
-}
-
-let Builder = {
-    parts: [
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
-        [WORK, CARRY, MOVE, MOVE]
-    ],
-    name: "Builder",
-    role: 'builder',
-}
-
-let Filler = {
-    parts: [
-        [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE],
-        [CARRY, CARRY, MOVE, MOVE]
-    ],
-    name: "Filler",
-    role: 'filler',
-}
-
-let Claimer = {
-    parts: [
-        [CLAIM, MOVE, MOVE]
-    ],
-    name: "Claimer",
-    role: 'claimer',
-}
-
-let Explorer = {
-    parts: [
-        [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE],
-        [WORK, CARRY, MOVE, MOVE]
-    ],
-    name: "Explorer",
-    role: 'explorer',
-}
-
 // Costs of creep parts
 let costs = new Map();
 costs.set(MOVE, 50);
@@ -119,7 +9,6 @@ costs.set(HEAL, 250);
 costs.set(CLAIM, 600);
 costs.set(TOUGH, 10);
 
-
 // Error Codes
 let errorMap = new Map();
 errorMap.set('0', 'The operation has been scheduled successfully.');
@@ -130,7 +19,7 @@ errorMap.set('-6', 'The spawn and its extensions contain not enough energy to cr
 errorMap.set('-10', 'Body is not properly described or name was not provided.');
 errorMap.set('-14', 'Your Room Controller level is insufficient to use this spawn.');
 
-var spawnCreeps = {
+var roleLib = {
 
     // takes an array of creep part constants as parameter, returns the energy cost sum of those parts
     creepCost: function (parts) {
@@ -138,268 +27,49 @@ var spawnCreeps = {
         for (let part in parts) {
             sum = sum + costs.get(parts[part]);
         }
-        return sum
+        return sum;
     },
 
-    //base function
-    spawnCreepOfRole: function (role, spawn, roomDestination, creepsSpawned, creepsNeeded, dependingCreepsSpawned){
-        switch (role) {
-            case 'harvester':
-                this.spawnHarvester(spawn, creepsSpawned, creepsNeeded);
-                break;
-            case 'upgrader':
-                this.spawnUpgrader(spawn, creepsSpawned, creepsNeeded, dependingCreepsSpawned);
-                break;
-            case 'builder':
-                // spawnBuilder has internal check on creepsNeeded, value not needed as parameter
-                this.spawnBuilder(spawn, roomDestination, creepsSpawned, dependingCreepsSpawned);
-                break;
-            case 'repairer':
-                this.spawnRepairer(spawn, creepsSpawned, creepsNeeded);
-                break;
-            case 'defender':
-                this.spawnDefender(spawn, creepsSpawned, creepsNeeded);
-                break;
-            case 'attacker':
-                this.spawnAttacker(spawn, creepsSpawned, creepsNeeded);
-                break;
-            case 'notifier':
-                this.spawnNotifier(spawn, creepsSpawned, creepsNeeded);
-                break;
-            case 'claimer':
-                this.spawnClaimer(spawn, roomDestination, creepsSpawned, creepsNeeded, dependingCreepsSpawned);
-                break;
-            case 'filler':
-                // spawnFiller has internal check on creepsNeeded, value not needed as parameter
-                this.spawnFiller(spawn, roomDestination, creepsSpawned, dependingCreepsSpawned);
-                break;
-            case 'explorer':
-                this.spawnExplorer(spawn, creepsSpawned, creepsNeeded, dependingCreepsSpawned);
-                break;
-        }
-    },
-
-    // Attempts to spawn any creep given the name of its type as defined in objects, the spawn to be used
-    // the number of existing creeps of that type, the number of creeps of that type desired, and any extra info
-    // to go in the creep memory
-    newSpawnCreepWithTheseParts: function(creepType, spawn, creepsSpawned, creepsNeeded, extraMemory) {
+    // Attempts to spawn a creep for the given role-registry entry. Assumes the caller has
+    // already checked creepsSpawned < creepsNeeded and any role-specific canSpawn gate.
+    spawnCreep: function (role, roleConfig, spawn, ctx) {
         let roomDestination = spawn.room;
-        let partsToUse = []
-
-        // Default memory
-        let memory = {role: creepType.role, room_dest: roomDestination.name}
+        let partsToUse = [];
         let currentCost = 0;
-        // If extra memory is supplied, create a new object with all keys of the default and extra memory
-        if (Object.keys(extraMemory).length > 0) {
-            memory = {...memory, ...extraMemory}
-        }
-        // check if the limit has been reached
-        if (creepsSpawned < creepsNeeded) {
-            let number = Game.time;
 
-            // Check each array of parts in the object in turn (assumes ordered from most to least expensive)
-            // Sets partsToUse to the first affordable one based on total availible capacity
-            for (let index in creepType.parts) {
-                currentCost = this.creepCost(creepType.parts[index]);
-                if (currentCost <= roomDestination.energyCapacityAvailable) {
-                    partsToUse = creepType.parts[index];
-                    break
-                }
+        // Roles scoped to a claimable room head there; everything else stays in its home room
+        let memory = { role: role, room_dest: ctx.targetRoomName || roomDestination.name };
+        if (roleConfig.extraMemory) {
+            memory = { ...memory, ...roleConfig.extraMemory(ctx) };
+        }
+
+        // Check each array of parts in turn (ordered most to least expensive) and use the
+        // first one this room can afford at full energy capacity
+        for (let index in roleConfig.parts) {
+            currentCost = this.creepCost(roleConfig.parts[index]);
+            if (currentCost <= roomDestination.energyCapacityAvailable) {
+                partsToUse = roleConfig.parts[index];
+                break;
             }
-            // If there is an affordable config
-            if (partsToUse.length){
-                // Check if spawn has enough energy stored
-                let errorCode = spawn.spawnCreep(partsToUse, creepType.name + "_" + roomDestination.name + "_" + number, {dryRun: true})
-                // No issues, spawn the creep
-                if (errorCode === 0) {
-                    console.log("Spawning " + creepType.name + "_" + roomDestination.name + "_" + number)
-                    spawn.spawnCreep(partsToUse, creepType.name + "_" + roomDestination.name + "_" + number, {memory: memory});
-                } else {
-                    // Spawn has enough capacity but not enough energy yet
-                    if (errorCode === -6) {
-                        console.log("Couldn't spawn " + creepType.name + " - " + roomDestination.energyAvailable + "/" + currentCost + " availible (Limit: " + roomDestination.energyCapacityAvailable + ")")
-                    } else {
-                        // Some other error occured, print out the error message
-                        console.log("Couldn't spawn " + creepType.name + " - Error: " + errorMap.get(errorCode.toString()));
-                    }
-                }
-            } else {
-                console.log("Can't afford to spawn " + creepType.name);
-            }
+        }
+
+        if (!partsToUse.length) {
+            console.log("Can't afford to spawn " + roleConfig.name);
+            return;
+        }
+
+        let name = roleConfig.name + "_" + roomDestination.name + "_" + Game.time;
+        let errorCode = spawn.spawnCreep(partsToUse, name, { dryRun: true });
+
+        if (errorCode === 0) {
+            console.log("Spawning " + name);
+            spawn.spawnCreep(partsToUse, name, { memory: memory });
+        } else if (errorCode === -6) {
+            console.log("Couldn't spawn " + roleConfig.name + " - " + roomDestination.energyAvailable + "/" + currentCost + " available (Limit: " + roomDestination.energyCapacityAvailable + ")");
         } else {
-            console.log(creepsSpawned + "/" + creepsNeeded + " " + creepType.name + "s exist");
+            console.log("Couldn't spawn " + roleConfig.name + " - Error: " + errorMap.get(errorCode.toString()));
         }
     },
-    
-    // Creep Role Wrapper Functions
-
-    // HARVESTER
-    spawnHarvester: function (spawn, creepsSpawned, creepsNeeded) {
-        this.newSpawnCreepWithTheseParts(Harvester, spawn, creepsSpawned, creepsNeeded, {});
-    },
-
-    // DEFENDER
-    spawnDefender: function (spawn, creepsSpawned, creepsNeeded) {
-        this.newSpawnCreepWithTheseParts(Defender, spawn, creepsSpawned, creepsNeeded, {});
-    },
-
-    // REPAIRER
-    spawnRepairer: function (spawn, creepsSpawned, creepsNeeded) {
-        this.newSpawnCreepWithTheseParts(Repairer, spawn, creepsSpawned, creepsNeeded, {});
-    },
-
-    // ATTACKER
-    spawnAttacker: function (spawn, creepsSpawned, creepsNeeded) {
-        this.newSpawnCreepWithTheseParts(Attacker, spawn, creepsSpawned, creepsNeeded, {});
-    },
-
-    // NOTIFIER
-    spawnNotifier: function (spawn, creepsSpawned, creepsNeeded) {
-        this.newSpawnCreepWithTheseParts(Notifier, spawn, creepsSpawned, creepsNeeded, {});
-    },
-
-    // EXTERNAL HARVESTER
-    spawnHarvesterExternal: function (spawn, roomDestination, creepsSpawned, creepsNeeded) {
-        let roomConstruct = Game.rooms[roomDestination];
-        let constructSpawn;
-        if (roomConstruct !== undefined) {
-            constructSpawn = roomConstruct.find(FIND_CONSTRUCTION_SITES, {
-                filter: (structure) => {
-                    return structure.structureType === STRUCTURE_SPAWN;
-                }
-            });
-        }
-
-        if (roomConstruct === undefined || constructSpawn.length > 0) {
-            extraMemory = {room_spawn: spawn.room.name, flag_dest_x: '25', flag_dest_y: '25'}
-            this.newSpawnCreepWithTheseParts(ExternalHarvester, spawn, creepsSpawned, creepsNeeded, extraMemory);
-        }
-    },
-
-    // MINERAL HARVESTER
-    spawnHarvesterMineral: function (spawn, roomDestination, creepsSpawned, creepsNeeded, dependingCreepsSpawned) {
-        let controllerLevel = roomDestination.controller.level;
-
-        if(controllerLevel >= 6) {
-            let room_mineral = roomDestination.find(FIND_MINERALS);
-            let room_storage = roomDestination.storage;
-            let room_storageFull = false;
-            if(room_storage != null) {
-                room_storageFull = room_storage.store < room_storage.store.getCapacity()
-            }
-            let room_extractor = roomDestination.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return structure.structureType === STRUCTURE_EXTRACTOR;
-                }});
-            if(room_extractor.length === 0) {
-                roomDestination.createConstructionSite(room_mineral[0].pos, STRUCTURE_EXTRACTOR)
-            }
-
-            if (creepsSpawned < creepsNeeded && room_extractor.length > 0 && room_mineral[0].mineralAmount > 0 && room_storageFull && dependingCreepsSpawned > 0) {
-                extraMemory = {room_spawn: roomDestination.name, flag_dest_x: '28', flag_dest_y: '11'}
-                this.newSpawnCreepWithTheseParts(MineralHarvester, spawn, creepsSpawned, creepsNeeded, extraMemory);
-            }
-        }
-    },
-
-    // UPGRADER
-    spawnUpgrader: function (spawn, creepsSpawned, dependingCreepsSpawned) {
-        //console.log("Trying to spawn Upgrader");
-        let room = spawn.room;
-        let controllerLevel = room.controller.level;
-        let creepsNeeded;
-
-        if (controllerLevel < 8) {
-            creepsNeeded = 3;
-        } else {
-            creepsNeeded = 2;
-        }
-        if (creepsSpawned < creepsNeeded && dependingCreepsSpawned > 0) {
-            if (room.energyAvailable >= 1200) {
-                let extraMemory = {clevel: '3'}
-                this.newSpawnCreepWithTheseParts(Upgrader, spawn, creepsSpawned, creepsNeeded, extraMemory);
-
-            } else if (room.energyAvailable >= 800) {
-                let extraMemory = {clevel: '2'}
-                this.newSpawnCreepWithTheseParts(Upgrader, spawn, creepsSpawned, creepsNeeded, extraMemory);
-
-            } else if (room.energyAvailable >= 500) {
-                let extraMemory = {clevel: '1'}
-                this.newSpawnCreepWithTheseParts(Upgrader, spawn, creepsSpawned, creepsNeeded, extraMemory);
-                
-            } else {
-                let extraMemory = {clevel: '0'}
-                this.newSpawnCreepWithTheseParts(Upgrader, spawn, creepsSpawned, creepsNeeded, extraMemory);
-            }
-        } else {
-            console.log(creepsSpawned + "/" + creepsNeeded + " Upgraders exist");
-        }
-
-    },
-
-    // BUILDER
-    spawnBuilder: function (spawn, roomDestination, creepsSpawned, dependingCreepsSpawned) {
-        let targets = roomDestination.find(FIND_CONSTRUCTION_SITES);
-        let creepsNeeded;
-        if (targets.length > 0 && targets.length <= 4) {
-            creepsNeeded = 2;
-        } else if (targets.length > 4) {
-            creepsNeeded = 4;
-        } else {
-            creepsNeeded = 0
-        }
-
-        if (creepsSpawned < creepsNeeded && dependingCreepsSpawned > 0) {
-            this.newSpawnCreepWithTheseParts(Builder, spawn, creepsSpawned, creepsNeeded, {});
-        } else {
-            console.log(creepsSpawned + "/" + creepsNeeded + " Builders exist");
-        }
-    },
-
-    // FILLER
-    spawnFiller: function (spawn, roomDestination, creepsSpawned, dependingCreepsSpawned) {
-        let links = roomDestination.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return structure.structureType === STRUCTURE_LINK || structure.structureType === STRUCTURE_STORAGE;
-            }
-        });
-        let creepsNeeded;
-
-        if ((links.length > 0) && (roomDestination.controller.level < 6)) {
-            creepsNeeded = 1;
-        } else if ((links.length > 0) && (roomDestination.controller.level > 5)) {
-            creepsNeeded = 2;
-        } else {
-            creepsNeeded = 0
-        }
-        if (creepsSpawned < creepsNeeded && dependingCreepsSpawned > 0) {
-            this.newSpawnCreepWithTheseParts(Builder, spawn, creepsSpawned, creepsNeeded, {});
-        }
-        else {
-            console.log(creepsSpawned + "/" + creepsNeeded + " Fillers exist or no storage/links are present");
-        }
-    },
-
-    // CLAIMER
-    spawnClaimer: function (spawn, roomDestination, creepsSpawned, creepsNeeded, dependingCreepsSpawned) {
-        let room = Game.rooms[roomDestination];
-
-        if (creepsSpawned < creepsNeeded && dependingCreepsSpawned > 0) {
-            if (room !== undefined) {
-                if (!room.controller.my) {
-                    let number = Game.time;
-                    this.newSpawnCreepWithTheseParts(Claimer, spawn, creepsSpawned, creepsNeeded, {});
-                }
-            }
-        } else {
-            console.log(creepsSpawned + "/" + creepsNeeded + " Claimers already");
-        }
-    },
-
-    // EXPLORER
-    spawnExplorer: function (spawn, creepsSpawned, creepsNeeded, dependingCreepsSpawned) {
-        this.newSpawnCreepWithTheseParts(Explorer, spawn, creepsSpawned, creepsNeeded, {});
-    }
 };
 
-module.exports = spawnCreeps;
+module.exports = roleLib;

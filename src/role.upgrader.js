@@ -22,7 +22,7 @@ var roleUpgrader = {
 
         if (creep.memory.room_dest != null && creep.room.name !== creep.memory.room_dest && !creep.memory.renew_process) {
             room_dest = creep.memory.room_dest;
-            var roomName = String(room_dest.name);
+            var roomName = String(room_dest);
             creep.moveTo(new RoomPosition(18, 25, roomName), {visualizePathStyle: {stroke: '#800080'}});
         } else {
             if (creep.memory.building && creep.store.getUsedCapacity([RESOURCE_ENERGY]) === 0) {
